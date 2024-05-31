@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Mirador Collections</title>
+  </head>
+  <body>
+    <ul id="collection-list"></ul>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const collections = [
+          {
+            name: "国絵図",
+            links: [
+              {
+                manifest:
+                  "https://www.digital.archives.go.jp/api/iiif/764029/manifest.json",
+              },
+              {
+                manifest:
+                  "https://www.digital.archives.go.jp/api/iiif/764193/manifest.json",
+              },
+            ],
+          },
+          {
+            name: "源氏物語",
+            links: [
+              {
+                manifest: "https://dl.ndl.go.jp/api/iiif/3437686/manifest.json",
+                canvas: "https://dl.ndl.go.jp/api/iiif/3437686/canvas/22",
+              },
+              {
+                manifest:
+                  "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/c1ea8e6b-9403-4394-8619-96aad0ec6329/manifest",
+                canvas:
+                  "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/c1ea8e6b-9403-4394-8619-96aad0ec6329/canvas/p4",
+              },
+              {
+                manifest:
+                  "https://catalog.lib.kyushu-u.ac.jp/image/manifest/1/820/411193.json",
+                canvas:
+                  "https://catalog.lib.kyushu-u.ac.jp/image/411193/canvas/p1",
+              },
+            ],
+          },
+        ];
+
+        const ul = document.getElementById("collection-list");
+
+        collections.forEach((collection) => {
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.textContent = collection.name;
+          a.href =
+            "./mirador/?q=" +
+            encodeURIComponent(JSON.stringify(collection.links));
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+      });
+    </script>
+  </body>
+</html>

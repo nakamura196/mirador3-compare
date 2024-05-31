@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Basic Mirador</title>
+  </head>
+  <body>
+    <div id="demo"></div>
+    <script src="./main.js"></script>
+    <script>
+      const { Mirador, miradorImageToolsPlugin } = integration
+      const params = new URLSearchParams(window.location.search)
+      const query = params.get('q')
+      let lang = params.get('lang') || 'ja' // 言語設定のデフォルト値を'ja'に設定
+
+      function parseItems(query) {
+        try {
+          return JSON.parse(decodeURIComponent(query))
+        } catch (error) {
+          console.error('Error parsing JSON from query', error)
+          return []
+        }
+      }
+
+      function createWindowConfig(item, index) {
+        const config = {
+          id: 'window_' + index,
+          manifestId: item.manifest,
+          imageToolsEnabled: true,
+          imageToolsOpen: true,
+          view: 'single',
+          canvasId: item.canvas || null,
+        }
+        return config
+      }
+
+      function createWorkspaceLayout(windows) {
+        if (windows.length < 2) return {}
+
+        let layout = {
+          first: 'window_' + (windows.length - 2),
+          second: 'window_' + (windows.length - 1),
+          direction: 'row',
+        }
+
+        for (let i = 2; i < windows.length; i++) {
+          const index = i + 1
+          layout = {
+            first: 'window_' + (windows.length - index),
+            second: layout,
+            direction: 'row',
+            splitPercentage: 100 / index,
+          }
+        }
+
+        return { layout }
+      }
+
+      const items = query ? parseItems(query) : []
+      const windows = items.map(createWindowConfig)
+
+      const workspace = createWorkspaceLayout(windows)
+
+      const config = {
+        id: 'demo',
+        windows,
+        workspace,
+        language: lang,
+      }
+
+      Mirador.viewer(config, [...miradorImageToolsPlugin])
+    </script>
+  </body>
+</html>
